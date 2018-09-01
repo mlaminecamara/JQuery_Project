@@ -34,8 +34,7 @@ $(function(){
             var place = options[Math.floor(Math.random() * options.length)];
                 var r = Math.floor((Math.random() * 10))
                 grille[place.x][place.y] = r > 0.7 ? 2: 4;
-        }
-        
+        }  
        
     }
     // fonction pour comparer ma grille avec sa copie
@@ -55,14 +54,42 @@ $(function(){
     // on fait une boucle pour dessiner la grille en remplissant avec les coordonnées i et j des nombres générés
     function Dessiner(){
         $(".container").empty();
+                
         for(var i = 0; i < 4; i++){
             $(".container").append('<div class="grid-row" id ="row" '+ i +'></div>');
             for( var j= 0; j < 4; j++){
                 if(grille[i][j] === 0)
-                $(".container").append('<div class="grid-cell" id =""></div>');
+                {   
+                    $(".container").append('<div class="grid-cell notColored"></div>');
+                }
+
                 else
-                //console.log(grille[i][j]);
-                $(".container").append('<div class="grid-cell" id =""> ' +grille[i][j] + '</div>');
+                {
+                var val = grille[i][j];
+                if(val == 2)
+                    $(".container").append('<div class="grid-cell colored2"> ' + val + '</div>');
+                if(val == 4)
+                    $(".container").append('<div class="grid-cell colored4"> ' + val + '</div>');
+                if(val == 8)
+                    $(".container").append('<div class="grid-cell colored8"> ' + val + '</div>');
+                if(val == 16)
+                    $(".container").append('<div class="grid-cell colored16"> ' + val + '</div>');
+                if(val == 32)
+                    $(".container").append('<div class="grid-cell colored32"> ' + val + '</div>');
+                if(val == 64)
+                    $(".container").append('<div class="grid-cell colored64"> ' + val + '</div>');
+                if(val == 128)
+                    $(".container").append('<div class="grid-cell colored128"> ' + val + '</div>');
+                if(val == 256)
+                    $(".container").append('<div class="grid-cell colored256"> ' + val + '</div>');
+                if(val == 512)
+                    $(".container").append('<div class="grid-cell colored512"> ' + val + '</div>');
+                if(val == 1024)
+                    $(".container").append('<div class="grid-cell colored1024"> ' + val + '</div>');
+                if(val == 2048)
+                    $(".container").append('<div class="grid-cell colored2048"> ' + val + '</div>');
+            }
+                
             }   
         
         }
@@ -85,7 +112,7 @@ function slide_right(row){
     var zeros = Array(missing).fill(0);  // Les autres sont mis dans un tableau et remplis de zéros
     arr = zeros.concat(arr); //On ajoute l'array au zéros
     return arr;
-    } 
+} 
 
 
 //fonction qui additionne deux cells identiques en allant vers la droite
@@ -154,7 +181,6 @@ function moveLeft(){
     if(changed){                          
         addNumber(); 
     }
-
     
 }
 
@@ -221,6 +247,8 @@ $(document).on("keydown",function(event) {
     //console.log("hello");   
     //var key = event.which || event.keyCode;
     var game = Gameover();
+    var won = Gamewon();
+
     switch(event.which){
         case 37:
         moveLeft();
@@ -236,25 +264,49 @@ $(document).on("keydown",function(event) {
         break;  
         //default:break;
     }
+
+    Dessiner();
+
     if(game){
         alert("Game over");
+        return false;
     }
-  Dessiner();
+     
+    if(won){
+        alert("Congratulations, you have completed the game!");
+        return false;
+    }
+        
+  
 })
     
 function Gameover(){
-    var gameover = true;
-    for(var i = 0; i < 3; i++){
-        for( var j= 0; j < 3; j++){
+    for(var i = 0; i < 4; i++){
+        for( var j= 0; j < 4; j++){
             if(grille[i][j] === 0)
-            return false;
-            if(grille[i][j] == grille[i][j+1])
-            return false;
-            if(grille[i][j] == grille[i+1][j])
-            return false;
+                return false;
+            if(i!= 3 && grille[i][j] == grille[i+1][j])
+                return false;
+            if(j != 3 && grille[i][j] == grille[i][j+1])
+                return false;
         }   
 }
 return true;
+}
+
+function Gamewon(){
+    for(var i = 0; i < 4; i++){
+        for( var j= 0; j < 4; j++){
+            if(grille[i][j] == 2048)
+                return true;
+        }
+    }
+    return false;
+}
+
+function resetScore(){
+    score = 0;
+    $(".score").html(score);
 }
 
 $(document).ready(function() {
@@ -263,10 +315,8 @@ $(document).ready(function() {
     $(".newgame").click(function(){
         setup();
         Dessiner();
-    })
-    //console.log(operate[0 ,0, 2, 2]);
-    //keyPressed();
-    //console.log(slide([4,0,2, 4]));              
+        resetScore();
+    })   
    
 })
 
